@@ -1,0 +1,46 @@
+			<div class="col-xs-12">
+				<div class="target-box" id="{{ elem.task_type }}_parent{{ elem.id }}">
+					<div class=col-xs-10>
+						<div class=sub-box-1>
+							{{ elem.task_name }}<br>
+							{% if elem.task_type == 'deadline' %}
+							{{ elem.soft_deadline }}<br>
+							{{ elem.hard_deadline }}
+						    {% endif %}
+						
+							{% if elem.task_type == 'recurring' %}
+							{{ elem.latest_event.started_time }} <br>
+							{{ elem.frequency }}
+							{% endif %}
+								
+						</div>
+					</div>
+					<div class=col-xs-2>
+						<div class=sub-box-1>
+
+							<div class=col-xs-12">
+								<div class="holder-box">
+								</div>
+							</div>
+							<div class=col-xs-12">
+								<div class="sub-box-2">
+									<div class="col-xs-12 nopadding">
+										<div class="green-box" id="{{ elem.task_type }}{{ elem.id }}">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class=col-xs-12">
+								<div class="sub-box-2">
+									<div class="col-xs-12 nopadding">
+										<div class="red-box" id="cancel-{{ elem.task_type}}{{elem.id}}">
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					
+				</div>
+			</div>

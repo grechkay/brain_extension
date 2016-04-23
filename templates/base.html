@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Bootstrap Example</title>
+	<meta charset="utf-8">
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+	<style>
+::-webkit-input-placeholder{
+	font-size:10px;
+}
+
+		.target-box{
+			background: linear-gradient(to bottom right, lightblue, white);
+			height:60px;
+			border-radius:10px;
+			margin:5px;
+		}
+
+		.holder-box{
+			height:10px;
+		}
+
+		.sub-box-1{
+			height:60px;
+		}
+
+		.sub-box-2{
+			height:25px;
+		}
+		
+		.red-box{
+			height:20px;
+			background: linear-gradient(to bottom right, red, darkred);
+			border-radius:10px;
+			box-shadow: rgb(110,110,110) 1px 1px;
+		}
+
+		.red-box:hover{
+			background: linear-gradient(to bottom right, DarkSalmon, red);
+		}
+
+		.green-box{
+			height:20px;
+			background: linear-gradient(to bottom right, green, yellowgreen);
+			border-radius:10px;
+			box-shadow: rgb(110,110,110) 1px 1px;
+		}
+
+		.green-box:hover{
+			background: linear-gradient(to bottom right, yellowgreen, paleturquoise);
+		}
+
+		.nopadding {
+			   padding: 0 !important;
+			   margin: 0 !important;
+		}
+
+		.container{
+			width: 1200px !important;
+		
+		}
+
+	</style>
+</head>
+
+
+<body>
+	<div class="container" style="background-color:lavender;">
+	<div class="row">
+    <div class="col-xs-4">
+		{% for elem in recurring_tasks %}
+		
+		{% include "task_container.html" %}
+		{% endfor %}
+		{% include "recurring_input.html" %}
+	</div>
+	<div class="col-xs-4" >
+		{% for elem in deadline_tasks %}
+		{% include "task_container.html" %}
+		
+		{% endfor %}
+		{% include "deadline_input.html" %}
+
+
+	</div>
+    <div class="col-xs-4">
+		{% for elem in notes %}
+		{% include "note_container.html" %}
+		  
+		{% endfor %}
+		{% include "note_input.html" %}
+	</div>
+	</div>
+	</div>
+	<script>
+		{% for task in deadline_tasks %}
+		$("#deadline{{ task.id }}").click(function() {
+			$.ajax({
+				url: "",
+				type : "POST",
+				data : {'task_type':'deadline','task_id':'{{ task.id }}',"csrfmiddlewaretoken":"{{ csrf_token }}" }
+
+			});
+			$("#deadline_parent{{ task.id }}").slideUp(200)
+		});		
+
+		$("#cancel-deadline{{ task.id }}").click(function() {
+			$.ajax({
+				url: "",
+				type: "POST",
+				data: {'task_type':'deadline_cancel','task_id':'{{task.id}}','csrfmiddlewaretoken':'{{ csrf_token }}' }
+			});
+			$("#deadline_parent{{ task.id }}").slideUp(200)
+		});
+
+		{% endfor %}
+		{% for task in recurring_tasks %}
+
+		$("#recurring{{ task.id }}").click(function() {
+			$.ajax({
+				url: "",
+				type : "POST",
+				data : {'task_type':'recurring','task_id':'{{ task.id }}',"csrfmiddlewaretoken":"{{ csrf_token }}" }
+
+			});
+			$("#recurring{{ task.id }}").fadeOut(100).fadeIn(100)
+		});
+		$("#cancel-recurring{{ task.id }}").click(function() {
+			$.ajax({
+				url: "",
+				type: "POST",
+				data: {'task_type':'recurring_cancel','task_id':'{{task.id}}','csrfmiddlewaretoken':'{{ csrf_token }}' }
+			});
+			$("#recurring_parent{{ task.id }}").slideUp(200)
+		});
+
+
+		{% endfor %}
+
+		$("#add-deadline").click(function(){
+			$.ajax({
+				url: "",
+				type : "POST",
+				data : {'task_type' : "deadline_new", 'task_name' : $("#input-deadline-1").val(), 'hard_dl' : $("#input-deadline-3").val(), 'soft_dl' : $("#input-deadline-2").val(), "csrfmiddlewaretoken":"{{ csrf_token }}" }
+			})
+			$("#input-deadline-1").val("")
+			$("#input-deadline-2").val("")
+			$("#input-deadline-3").val("")
+		})
+
+		$("#add-recurring").click(function(){
+			$.ajax({
+				url: "",
+				type: "POST",
+				data : {'task_type' : "recurring_new", 'task_name' : $("#input-recurring-1").val(), "days" : $("#input-recurring-2").val(), "hours" : $("#input-recurring-3").val(), "csrfmiddlewaretoken" : "{{ csrf_token }}" }
+			})
+			$("#input-recurring-1").val("")
+			$("#input-recurring-2").val("")
+			$("#input-recurring-3").val("")
+		})
+
+	</script>
+
+
+</body>
+
